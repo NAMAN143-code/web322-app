@@ -11,13 +11,10 @@ source
 * Online (Heroku) URL: ________________  ____ https://stark-waters-12789.herokuapp.com/ deployed to Heroku____
 ************************************************************************
 ********/ 
-var express = require("express");
-const res = require("express/lib/response");
+const express = require("express");
 const blog_service = require("./blog-service.js");
-const Posts = require("./data/posts.json");
-const Categories = require("./data/categories.json");
 const path = require('path');
-var app = express();
+const app = express();
 var HTTP_PORT = process.env.PORT || 8080;
 
 app.use(express.static('public'));
@@ -36,19 +33,36 @@ app.get("/about",function (req,res) {
 });
 
 app.get("/blog",function (req,res) {
-    res.json(Posts.filter(({ published }) => published === true));
+    blog_service.getPublishedPosts().then((obj)=>{
+        res.send(obj);
+    }).catch((err)=>{
+        res.send("500 : internal server error" + err);
+    });
 });
 
 app.get("/posts", function(req, res) {
-    res.json(Posts);
+    blog_service.getAllPosts().then((obj)=>{
+        res.send(obj);
+    }).catch((err) => {
+        res.send("500 : internal server error" + err);
+    });
 });
 
 app.get("/categories", function(req, res) {
-    res.json(Categories);
+    blog_service.getCategories().then((obj)=>{
+        res.send(obj);
+    }).catch((err)=>{
+        res.send("500 : internal server error" + err);
+    });
 });
 
 app.use((req,res) =>{
     res.status(404).send("404 : Page Not Found");
 });
 
-app.listen(HTTP_PORT,onHttpStart);
+
+blog_service.initialize().then((obj)=>{
+    app.listen(HTTP_PORT,onHttpStart());
+}).catch((err)=>{
+    console.log(err);
+});
