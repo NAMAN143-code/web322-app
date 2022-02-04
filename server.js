@@ -1,16 +1,18 @@
-/**********************************************************************
-* WEB322 – Assignment 2
-* I declare that this assignment is my own work in accordance with Seneca Academic
-Policy.
-* No part of this assignment has been copied manually or electronically from any other
-source
-* (including web sites) or distributed to other students.
+/*****************************************************************************
+****
+* WEB322 – Assignment 02
+* I declare that this assignment is my own work in accordance with Seneca Academic Policy. 
+No part * of this assignment has been copied manually or electronically from any other source 
+* (including 3rd party web sites) or distributed to other students.
+* 
+* Name: ___Burhanuddin.Kutbuddin.Chunawala__ Student ID: ___156718207___ Date: __02/04/2022__
 *
-* Name: _____Burhanuddin.Kutbuddin.Chunawala___________ Student ID: _____156718207_________ Date: ____02/04/2022____________
+* Online (Heroku) URL: https://murmuring-lowlands-00848.herokuapp.com/
 *
-* Online (Heroku) URL: ________________  ____ https://stark-waters-12789.herokuapp.com/ deployed to Heroku____
-************************************************************************
-********/ 
+* GitHub Repository URL: https://github.com/Burhanchuna/web322-app
+*
+******************************************************************************
+**/
 const express = require("express");
 const blog_service = require("./blog-service.js");
 const path = require('path');
