@@ -1,6 +1,7 @@
 var posts = [];
 var categories = [];
 const fs = require('fs');
+const { resolve } = require('path');
 
 function initialize(){
     return new Promise((resolve, reject) => {
@@ -28,13 +29,13 @@ function initialize(){
 
 function getAllPosts(){
     return new Promise((resolve, reject) => {
-        if (posts == 0) {
+        if (posts.length == 0) {
             reject('Data not found');
         } else {
             resolve(posts);
         }
     });
-}
+};
 
 function getPublishedPosts(){
     return new Promise((resolve, reject) => {
@@ -49,12 +50,62 @@ function getPublishedPosts(){
 
 function getCategories(){
     return new Promise((resolve, reject) => {
-        if (categories === 0) {
+        if (categories.length == 0) {
             reject("Data not found");
         } else {
             resolve(categories);
         }
     });
 }
-
 module.exports = { initialize, getAllPosts, getPublishedPosts, getCategories };
+
+module.exports.addPost = (postData) => {
+    postData.published == undefined ? postData.published = false : postData.published = true;
+    postData.id = posts.length + 1;
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    postData.postDate = today;
+    console.log(postData);
+    posts.push(postData);
+
+    return new Promise((resolve, reject) =>{
+        if(posts.length == 0){
+            reject('No Result');
+        } else{
+            resolve(posts);
+        }
+    });
+};
+
+module.exports.getPostsByCategory = (category) => {
+    return new Promise((resolve,reject) => {
+        var cat = posts.filter(posts => posts.category == category);
+        if(cat.length == 0){
+            reject("Category Data Not Found");
+        } 
+        resolve(cat);
+    });
+};
+
+module.exports.getPostsByMinDate = (minDateStr) => {
+    return new Promise((resolve,reject) => {
+        var post = posts.filter(post => post.postDate >= minDateStr);
+        if(post.length == 0){
+            reject("No data found");
+        }
+        resolve(post);
+    });
+};
+
+module.exports.getPostById = (id) => {
+    return new Promise((resolve,reject) => {
+        var postById = posts.filter(posts => posts.id == id);
+        if (postById.length == 0) {
+            reject('no post found');
+        }
+        resolve(postById);
+    });
+};
