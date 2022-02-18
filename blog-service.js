@@ -64,11 +64,10 @@ module.exports.addPost = (postData) => {
     postData.id = posts.length + 1;
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
     var yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
     postData.postDate = today;
-    console.log(postData);
     posts.push(postData);
 
     return new Promise((resolve, reject) =>{

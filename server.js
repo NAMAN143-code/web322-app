@@ -80,7 +80,7 @@ app.get("/posts", function(req, res) {
     
 });
 
-app.get("/posts/:value",(req,res) =>{
+app.get("/post/:value",(req,res) =>{
     blog_service.getPostById(req.params.value).then((data) => {
         res.json(data);
     }).catch((err) => {
@@ -97,7 +97,7 @@ app.get("/categories", function(req, res) {
 });
 
 app.get("/posts/add", (req,res) => {
-    res.sendFile(path.join(__dirname + "/views/addPost.html"));
+    res.sendFile(path.join(__dirname,"/views","addPost.html"));
 });
 
 app.post("/posts/add", upload.single("featureImage"),(req,res,next) => {
@@ -115,8 +115,8 @@ app.post("/posts/add", upload.single("featureImage"),(req,res,next) => {
     };
     async function upload(req) {
         let result = await streamUpload(req);
-        console.log(result)
-        return result
+        console.log(result);
+        return result;
     }
     upload(req).then((uploaded) => {
         req.body.featureImage = uploaded.url;
