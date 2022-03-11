@@ -1,9 +1,8 @@
 var posts = [];
 var categories = [];
 const fs = require('fs');
-const { resolve } = require('path');
 
-function initialize(){
+function initialize() {
     return new Promise((resolve, reject) => {
 
         fs.readFile('./data/posts.json', 'utf8', (err, p_data) => {
@@ -27,7 +26,7 @@ function initialize(){
     });
 }
 
-function getAllPosts(){
+function getAllPosts() {
     return new Promise((resolve, reject) => {
         if (posts.length == 0) {
             reject('Data not found');
@@ -37,7 +36,7 @@ function getAllPosts(){
     });
 };
 
-function getPublishedPosts(){
+function getPublishedPosts() {
     return new Promise((resolve, reject) => {
         var post_Published = posts.filter(({ published }) => published === true);
         if (post_Published === 0) {
@@ -48,7 +47,7 @@ function getPublishedPosts(){
     });
 }
 
-function getCategories(){
+function getCategories() {
     return new Promise((resolve, reject) => {
         if (categories.length == 0) {
             reject("Data not found");
@@ -57,7 +56,18 @@ function getCategories(){
         }
     });
 }
-module.exports = { initialize, getAllPosts, getPublishedPosts, getCategories };
+
+function getPublishedPostsByCategory(category) {
+    return new Promise((resolve, reject) => {
+        var post_Published = posts.filter(({ published, category }) => published === true && category == category);
+        if (post_Published === 0) {
+            reject("Data not found");
+        } else {
+            resolve(post_Published);
+        }
+    });
+}
+module.exports = { initialize, getAllPosts, getPublishedPosts, getCategories, getPublishedPostsByCategory };
 
 module.exports.addPost = (postData) => {
     postData.published == undefined ? postData.published = false : postData.published = true;
@@ -70,29 +80,29 @@ module.exports.addPost = (postData) => {
     postData.postDate = today;
     posts.push(postData);
 
-    return new Promise((resolve, reject) =>{
-        if(posts.length == 0){
+    return new Promise((resolve, reject) => {
+        if (posts.length == 0) {
             reject('No Result');
-        } else{
+        } else {
             resolve(posts);
         }
     });
 };
 
 module.exports.getPostsByCategory = (category) => {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         var cat = posts.filter(posts => posts.category == category);
-        if(cat.length == 0){
+        if (cat.length == 0) {
             reject("Category Data Not Found");
-        } 
+        }
         resolve(cat);
     });
 };
 
 module.exports.getPostsByMinDate = (minDateStr) => {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         var post = posts.filter(post => post.postDate >= minDateStr);
-        if(post.length == 0){
+        if (post.length == 0) {
             reject("No data found");
         }
         resolve(post);
@@ -100,7 +110,7 @@ module.exports.getPostsByMinDate = (minDateStr) => {
 };
 
 module.exports.getPostById = (id) => {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         var postById = posts.filter(posts => posts.id == id);
         if (postById.length == 0) {
             reject('no post found');
