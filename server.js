@@ -1,18 +1,4 @@
-/*****************************************************************************
-****
-* WEB322 – Assignment 02
-* I declare that this assignment is my own work in accordance with Seneca Academic Policy. 
-No part * of this assignment has been copied manually or electronically from any other source 
-* (including 3rd party web sites) or distributed to other students.
-* 
-* Name: ___Burhanuddin.Kutbuddin.Chunawala__ Student ID: ___156718207___ Date: __02/04/2022__
-*
-* Online (Heroku) URL: https://murmuring-lowlands-00848.herokuapp.com/
-*
-* GitHub Repository URL: https://github.com/Burhanchuna/web322-app
-*
-******************************************************************************
-**/
+const exphbs = require("express-handlebars");
 const express = require("express");
 const blog_service = require("./blog-service.js");
 const path = require('path');
@@ -20,11 +6,11 @@ const multer = require("multer");
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
 
-cloudinary.config({ 
-    cloud_name: 'da1tu1ulp', 
-    api_key: '194827692874383', 
-    api_secret: 'uJojhgSbQIR8Zb74tX_GTsG2dRI' 
-  });
+cloudinary.config({
+    cloud_name: 'da1tu1ulp',
+    api_key: '194827692874383',
+    api_secret: 'uJojhgSbQIR8Zb74tX_GTsG2dRI'
+});
 
 const upload = multer();
 
@@ -33,74 +19,104 @@ const app = express();
 var HTTP_PORT = process.env.PORT || 8080;
 
 app.use(express.static('public'));
+app.engine('.hbs', exphbs.engine({
+
+    extname: '.hbs',
+
+    defaultLayout: "main",
+
+    helpers: {
+
+        navLink: function(url, options) {
+            return '<li' +
+                ((url == app.locals.activeRoute) ? ' class="active" ' : '') +
+                '><a href="' + url + '">' + options.fn(this) + '</a></li>';
+        },
+
+
+        equal: function(lvalue, rvalue, options) {
+            if (arguments.length < 3)
+                throw new Error("Handlebars Helper equal needs 2 parameters");
+            if (lvalue != rvalue) {
+                return options.inverse(this);
+            } else {
+                return options.fn(this);
+            }
+        },
+    }
+}));
+app.set('view engine', '.hbs');
 
 function onHttpStart() {
     console.log("Express http server listening on port : " + HTTP_PORT);
 }
-
+app.use(function(req, res, next) {
+    let route = req.path.substring(1);
+    app.locals.activeRoute = (route == "/") ? "/" : "/" + route.replace(/\/(.*)/, "");
+    app.locals.viewingCategory = req.query.category;
+    next();
+});
 app.get("/", (req, res) => {
     res.redirect('/about');
     res.send("Hello World<br /><a href='/about'>Go to the about page</a>");
 });
 
-app.get("/about",function (req,res) {
-    res.sendFile(path.join(__dirname,"/views","about.html"));
+app.get("/about", function(req, res) {
+    res.render(path.join(__dirname, "/views", "about.hbs"));
 });
 
-app.get("/blog",function (req,res) {
-    blog_service.getPublishedPosts().then((obj)=>{
+app.get("/blog", function(req, res) {
+    blog_service.getPublishedPosts().then((obj) => {
         res.send(obj);
-    }).catch((err)=>{
+    }).catch((err) => {
         res.send("500 : internal server error" + err);
     });
 });
 
 app.get("/posts", function(req, res) {
-    if(req.query.category){
+    if (req.query.category) {
         blog_service.getPostsByCategory(req.query.category).then((data) => {
-            res.json({data});
+            res.render("posts", { posts: data });
         }).catch((err) => {
-            res.json({message : err});
+            res.render("posts", { message: "no results" });
         });
-    }
-    else if(req.query.minDate){
+    } else if (req.query.minDate) {
         blog_service.getPostsByMinDate(req.query.minDate).then((data) => {
-            res.json(data);
+            res.render("posts", { posts: data });
         }).catch((err) => {
-            res.json({message : err});
+            res.render("posts", { message: "no results" });
         });
-    }
-    else{
-        blog_service.getAllPosts().then((obj)=>{
-            res.send(obj);
+    } else {
+        blog_service.getAllPosts().then((data) => {
+            res.render("posts", { posts: data });
         }).catch((err) => {
             res.send("500 : internal server error" + err);
         });
     }
-    
+
 });
 
-app.get("/post/:value",(req,res) =>{
+app.get("/post/:value", (req, res) => {
     blog_service.getPostById(req.params.value).then((data) => {
         res.json(data);
     }).catch((err) => {
-        res.json({message : err});
+        res.json({ message: err });
     });
 });
 
 app.get("/categories", function(req, res) {
-    blog_service.getCategories().then((obj)=>{
+    blog_service.getCategories().then((obj) => {
         res.send(obj);
-    }).catch((err)=>{
+    }).catch((err) => {
         res.send("500 : internal server error" + err);
     });
 });
 
-app.get("/posts/add", (req,res) => {
-    res.sendFile(path.join(__dirname,"/views","addPost.html"));
+app.get("/posts/add", (req, res) => {
+    res.render(path.join(__dirname, "/views", "addPost.hbs"));
 });
 
-app.post("/posts/add", upload.single("featureImage"),(req,res,next) => {
+app.post("/posts/add", upload.single("featureImage"), (req, res, next) => {
     let streamUpload = (req) => {
         return new Promise((resolve, reject) => {
             let stream = cloudinary.uploader.upload_stream((error, result) => {
@@ -126,13 +142,13 @@ app.post("/posts/add", upload.single("featureImage"),(req,res,next) => {
     });
 });
 
-app.use((req,res) =>{
+app.use((req, res) => {
     res.status(404).send("404 : Page Not Found");
 });
 
 
-blog_service.initialize().then((obj)=>{
-    app.listen(HTTP_PORT,onHttpStart());
-}).catch((err)=>{
+blog_service.initialize().then((obj) => {
+    app.listen(HTTP_PORT, onHttpStart());
+}).catch((err) => {
     console.log(err);
 });
