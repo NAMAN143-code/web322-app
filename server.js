@@ -56,10 +56,15 @@ function onHttpStart() {
     console.log("Express http server listening on port : " + HTTP_PORT);
 }
 app.use(function(req, res, next) {
+
     let route = req.path.substring(1);
-    app.locals.activeRoute = (route == "/") ? "/" : "/" + route.replace(/\/(.*)/, "");
+
+    app.locals.activeRoute = "/" + (isNaN(route.split('/')[1]) ? route.replace(/\/(?!.*)/, "") : route.replace(/\/(.*)/, ""));
+
     app.locals.viewingCategory = req.query.category;
+
     next();
+
 });
 app.get("/", (req, res) => {
     res.redirect('/blog');
@@ -229,7 +234,7 @@ app.post("/posts/add", upload.single("featureImage"), (req, res, next) => {
 });
 
 app.use((req, res) => {
-    res.status(404).send("404 : Page Not Found");
+    res.status(404).render("404");
 });
 
 
