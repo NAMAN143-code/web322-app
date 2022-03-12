@@ -1,3 +1,17 @@
+/*********************************************************************************
+* WEB322 – Assignment 04
+* I declare that this assignment is my own work in accordance with Seneca Academic
+Policy. No part
+* of this assignment has been copied manually or electronically from any other source
+* (including 3rd party web sites) or distributed to other students.
+*
+* Name: Naman Sharma Student ID: 157151200 -Date:3/11/2022
+________________
+*
+* Online (Heroku) Link:
+________________________________________________________
+*
+********************************************************************************/
 const exphbs = require("express-handlebars");
 const express = require("express");
 const blogData = require("./blog-service.js");
