@@ -6,10 +6,9 @@ Policy. No part
 * (including 3rd party web sites) or distributed to other students.
 *
 * Name: Naman Sharma Student ID: 157151200 -Date:3/11/2022
-________________
 *
 * Online (Heroku) Link:
-________________________________________________________
+https://git.heroku.com/salty-crag-45626.git
 *
 ********************************************************************************/
 const exphbs = require("express-handlebars");
