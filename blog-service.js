@@ -133,3 +133,34 @@ module.exports.getPostById = (id) => {
             .catch(err => reject('No results in return | Error:' + err))
     });
 }
+
+module.exports.addCategory = (categoryData) => {
+    return new Promise((resolve, reject) => {
+        for (let i in categoryData) {
+            if (categoryData[i] == "") { categoryData[i] = null; }
+        }
+        Category.create(categoryData)
+            .then(resolve())
+            .catch(reject('unable to create Category'))
+
+    })
+}
+
+module.exports.deleteCategoryById = (id) => {
+    return new Promise((resolve, reject) => {
+        Category.destroy({
+                where: { id: id }
+            })
+            .then(resolve())
+            .catch((err) => reject(err))
+    })
+}
+
+module.exports.deletePostById = (id) => {
+    return new Promise((resolve, reject) => {
+        Post.destroy({
+            where: { id: id }
+        }).then(resolve()).catch(err => reject(err))
+
+    })
+}

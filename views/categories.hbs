@@ -1,6 +1,8 @@
 <div class="row">
     <div class="col-md-12">
-        <h2>Categories</h2>
+        <h2>Categories
+            • <a href="/categories/add" class="btn btn-success pull-right">Add Category</a>
+        </h2>
         <hr />
         <div class="table-responsive">
             <table class="table">
@@ -13,8 +15,9 @@
                 <tbody>
                     {{#each categories}}
                     <tr>
-                        <td><a href="/posts?category={{id}}">{{id}}</a></td>
-                        <td><a href="/posts?category={{id}}">{{category}}</a></td>
+                        <td><a href="/posts?category={{this.id}}">{{this.id}}</a></td>
+                        <td><a href="/posts?category={{this.id}}">{{this.category}}</a></td>
+                        <td><a href="/category/delete/{{this.id}}" class="btn btn-danger pull-right">Delete</a></td>
                     </tr>
                     {{/each}}
                 </tbody>
