@@ -39,7 +39,6 @@ module.exports.getAllPosts = () => {
         Post.findAll().then(() => { resolve(); }).catch((error) => { reject("no results returned") })
     });
 };
-asdasda
 module.exports.getPublishedPosts = () => {
     return new Promise((resolve, reject) => {
         reject();
