@@ -25,21 +25,29 @@
 
     </section>
 
-    <aside class="col-md-3">
+  <aside class="col-md-3">
         <br /><br />
-    {{#if data.posts}}
-        <h4>Posts</h4>
-        <ul class="list-group">
-     {{#each data.posts}}<a href="/blog/{{id}}?category={{../viewingCategory}}" class="list-group-item">{{title}}</a> {{/each}}
-        </ul>
-    {{/if}}
+         {{#if data.posts}}
+            <h4>Posts</h4>
+            <ul class="list-group">
+                {{#each data.posts}}
+                    <a href="/blog/{{id}}?category={{../viewingCategory}}" class="list-group-item">{{title}}</a> 
+                {{/each}}
+            </ul>
+        {{/if}}
 
+        {{#if data.categories}}
         <h4>Categories</h4>
         <ul class="list-group">
-      {{#each data.categories}}<a href="/blog?category={{id}}" class="list-group-item">{{category}}</a> {{/each}}
-
+           {{#each data.categories}}
+                <a href="/blog?category={{id}}" class="list-group-item">{{category}}</a>
+            {{/each}}
         </ul>
-
-    </aside>   
+        {{/if}}
+    </aside>
 </div>
 
+
+
+
+   
