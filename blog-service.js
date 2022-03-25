@@ -29,8 +29,8 @@ module.exports.initialize = () => {
         sequelize.sync().then(() => {
             sequelize
                 .authenticate()
-                .then(resolve("connection established succesfully"))
-                .catch((error) => { reject('unable to sync the database') })
+                .then(resolve("connection established"))
+                .catch((error) => { reject('syncing error, something went wrong' + error) })
         });
     });
 }
@@ -54,7 +54,7 @@ module.exports.getCategories = function() {
     return new Promise((resolve, reject) => {
         Category.findAll()
             .then(data => resolve(data))
-            .catch(err => reject('No results in return | Error: ' + err))
+            .catch(err => reject('No results'))
     });
 }
 
@@ -65,11 +65,11 @@ module.exports.getPublishedPostsByCategory = function(category) {
         Post.findAll({
                 where: {
                     published: true,
-                    category: category // changes tbd if the posts table cant fetch the data after clicking on category in row. 
+                    category: category
                 }
             })
             .then(data => resolve(data))
-            .catch(err => reject('No results in return | Error: ' + err))
+            .catch(err => reject('No results'))
     });
 }
 
@@ -92,7 +92,7 @@ module.exports.addPost = (postData) => {
     });
 }
 
-//Function to be completed.
+
 module.exports.getPostsByCategory = (category) => {
 
     return new Promise((resolve, reject) => {
@@ -102,7 +102,7 @@ module.exports.getPostsByCategory = (category) => {
                 }
             })
             .then(data => resolve(data))
-            .catch(err => reject('No results in return | Error:' + err))
+            .catch(err => reject('No results'))
     });
 };
 
